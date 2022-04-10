@@ -8,15 +8,30 @@ class LogisticRegression():
         self.num_iters = num_iters
 
      # m for training examples, n for features
-        self.m, self.n = X.shape
+        self.m = self.m 
+        self.n = X.shape
+
+    def sigmoid(self, z):
+        
+        """
+          Activation function used to map any real value between 0 and 1.
+          sigmoid(h(x)) = 1 / (1 + e^-((w.T * x) + b))
+        """
+        return 1 / (1 + np.exp(-z))
+
 
     def train(self, X, y):
-        self.weights = np.zeros((self.n, 768))
+        self.weights = np.zeros((self.n, 1))
         self.bias = 0
 
         for i in range(self.num_iters+1):
             # calculate hypothesis
             y_predict = self.sigmoid(np.dot(X, self.weights) + self.bias)
+
+            """
+               cost function formula:
+               C(w, b) = -1/m * sum(i = 0 to m)(y*log h(x) + (1 - y)log(1 - h(x))         
+            """
 
             # calculate cost
             cost = -1/self.m * np.sum(y * np.log(y_predict) + (1 - y) * np.log(1 - y_predict))
@@ -46,18 +61,16 @@ class LogisticRegression():
         return accuracy
 
 
-    def sigmoid(self, z):
-        return 1 / (1 + np.exp(-z))
-
+    
 
 if __name__ == '__main__':
-    # np.random.seed(1)
-    # X, y = make_blobs(n_samples=1000, centers=2)
-    # y = y[:, np.newaxis]
+    np.random.seed(1)
+    X, y = make_blobs(n_samples=1000, centers=2)
+    y = y[:, np.newaxis]
 
-    data = pd.read_csv("C:\\Users\\ritth\\code\\Strive\\Logistic-Regression-grp-I-R\\diabetes.csv")
-    X = data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7]].values  
-    y = data.iloc[:, 8].values  
+    # data = pd.read_csv("C:\\Users\\ritth\\code\\Strive\\Logistic-Regression-grp-I-R\\diabetes.csv")
+    # X = data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7]].values  
+    # y = data.iloc[:, 8].values  
 
     logreg = LogisticRegression(X)
     w, b = logreg.train(X, y)
